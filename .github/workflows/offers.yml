@@ -1,0 +1,50 @@
+# Еженедельное обновление акций Lidl.
+# GitHub сам запускает это на своих компьютерах — ваш ПК может быть выключен.
+#
+# Когда: каждое воскресенье в 05:00 по немецкому времени зимой (06:00 летом);
+# в расписании время указано в UTC. К этому моменту на Marktguru уже есть
+# проспект на новую неделю.
+# GitHub может запустить с опозданием на несколько минут — это нормально.
+# Можно запустить и вручную: вкладка Actions → «Обновить акции Lidl» → Run workflow.
+
+name: Обновить акции Lidl
+
+on:
+  schedule:
+    - cron: "0 4 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write   # чтобы сохранить новый data/offers.json в репозиторий
+
+concurrency:
+  group: offers
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Скачать проект
+        uses: actions/checkout@v4
+
+      - name: Установить Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Скачать акции
+        run: python scripts/fetch_offers.py
+
+      - name: Сохранить, если акции изменились
+        run: |
+          if git diff --quiet -- data/offers.json; then
+            echo "Акции не изменились."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/offers.json
+          git commit -m "Обновить акции Lidl ($(date -u +%Y-%m-%d))"
+          git push
