@@ -1,0 +1,473 @@
+/*
+  Оформление «Корзинки».
+  Все цвета собраны в одном месте (переменные ниже),
+  чтобы легко менять их и поддерживать тёмную тему телефона.
+*/
+
+:root {
+  --bg: #f6f4ef;          /* фон страницы */
+  --surface: #ffffff;     /* фон карточек */
+  --text: #1f2a24;        /* основной текст */
+  --muted: #6b756f;       /* второстепенный текст */
+  --border: #e3e0d8;      /* линии и рамки */
+  --accent: #2f8f5b;      /* фирменный зелёный */
+  --accent-text: #ffffff; /* текст на зелёном */
+  --accent-soft: #e3f2e9; /* светло-зелёная подложка */
+  --sale: #d9480f;        /* цвет для акций */
+  --radius: 14px;
+  --tabbar-h: 64px;
+  color-scheme: light;
+}
+
+/* Тёмная тема — включается сама, если на телефоне тёмный режим */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #131815;
+    --surface: #1c231f;
+    --text: #e8ece9;
+    --muted: #9aa59e;
+    --border: #2c3530;
+    --accent: #4cb87e;
+    --accent-text: #0d1a12;
+    --accent-soft: #1f3529;
+    --sale: #ff8a50;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #131815;
+  --surface: #1c231f;
+  --text: #e8ece9;
+  --muted: #9aa59e;
+  --border: #2c3530;
+  --accent: #4cb87e;
+  --accent-text: #0d1a12;
+  --accent-soft: #1f3529;
+  --sale: #ff8a50;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+html, body { margin: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
+  /* место снизу, чтобы меню не закрывало текст */
+  padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+}
+
+/* ---------- Шапка ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+.topbar__logo img { display: block; border-radius: 8px; }
+.topbar__title { margin: 0; font-size: 20px; line-height: 1.2; }
+.topbar__subtitle { margin: 0; font-size: 13px; color: var(--muted); }
+
+/* ---------- Область экрана ---------- */
+.screen {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 16px;
+  outline: none;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.card h2 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0 0 8px; }
+.card p:last-child { margin-bottom: 0; }
+.muted { color: var(--muted); }
+
+.list { margin: 8px 0 0; padding-left: 20px; }
+.list li { margin-bottom: 4px; }
+
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;          /* удобно нажимать пальцем */
+  padding: 0 20px;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-text);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn--block { display: flex; width: 100%; }
+
+.btn--ghost {
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+}
+.small { font-size: 14px; }
+.intro { margin: 0 0 12px; font-size: 14px; }
+.warn { color: var(--sale); font-size: 14px; margin: 8px 0 0; }
+
+/* ---------- Анкета ---------- */
+.card h2 { display: flex; align-items: center; gap: 10px; }
+.num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 14px;
+}
+
+.field { display: block; flex: 1 1 0; min-width: 0; margin-bottom: 12px; }
+.field--small { flex: 0 0 120px; }
+.field__label { display: block; margin: 12px 0 6px; font-size: 14px; color: var(--muted); }
+.field .field__label { margin-top: 0; }
+.row { display: flex; gap: 12px; }
+
+.input {
+  width: 100%;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+.input:focus { outline: none; border-color: var(--accent); }
+
+/* Кнопки-«таблетки» для выбора */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-flex; }
+.chip input { position: absolute; opacity: 0; pointer-events: none; }
+.chip > span,
+.chip--custom {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 40px;
+  padding: 6px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 15px;
+  cursor: pointer;
+  user-select: none;
+}
+.chip small { color: var(--muted); font-size: 12px; }
+.chip input:checked + span,
+.chip--on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+.chip input:checked + span small { color: inherit; opacity: .8; }
+.chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chips + .chips { margin-top: 8px; }
+.chip__x {
+  border: none;
+  background: none;
+  color: inherit;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0 0 0 4px;
+  cursor: pointer;
+}
+
+.add-row { display: flex; gap: 8px; margin-top: 12px; }
+.add-row .btn { flex: none; min-height: 46px; padding: 0 16px; }
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
+  font-size: 15px;
+}
+.switch input { width: 22px; height: 22px; accent-color: var(--accent); }
+
+.time-table { width: 100%; margin-top: 12px; border-collapse: collapse; font-size: 14px; }
+.time-table th { text-align: left; font-weight: 600; padding: 4px 6px 4px 0; }
+.time-table thead th { color: var(--muted); font-weight: 400; }
+.time-table td { padding: 4px 0 4px 6px; }
+.time-table .input { min-height: 40px; padding: 0 6px; font-size: 14px; }
+
+.person {
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+}
+.person .input { background: var(--surface); }
+.calc summary { color: var(--accent); font-size: 14px; cursor: pointer; padding: 4px 0; }
+.calc[open] summary { margin-bottom: 8px; }
+.link-danger {
+  margin-top: 8px;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  color: var(--sale);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* ---------- Рецепты ---------- */
+.search { margin-bottom: 12px; }
+.chips--scroll { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; margin-bottom: 8px; scrollbar-width: none; }
+.chips--scroll .chip > span { white-space: nowrap; }
+
+.recipe-card { display: block; color: inherit; text-decoration: none; }
+.recipe-card h3 { margin: 0 0 6px; font-size: 17px; }
+.recipe-card:active { background: var(--accent-soft); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 14px; margin: 0; font-size: 14px; color: var(--muted); }
+
+.hidden-list summary { cursor: pointer; color: var(--muted); font-size: 14px; }
+.hidden-list .list { margin-top: 10px; }
+
+.back { display: inline-block; margin-bottom: 8px; color: var(--accent); text-decoration: none; font-size: 15px; padding: 4px 0; }
+.recipe-title { margin: 0 0 12px; font-size: 22px; line-height: 1.25; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 8px; }
+.stats div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 4px;
+  border-radius: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.stats b { font-size: 16px; }
+.stats span { font-size: 12px; color: var(--muted); }
+.macros { margin: 0 0 12px; }
+
+.card h3 { margin: 0 0 8px; font-size: 17px; }
+.portions { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.portions h3 { margin: 0; }
+.stepper { display: flex; align-items: center; gap: 4px; font-size: 14px; }
+.stepper button {
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 20px;
+  cursor: pointer;
+}
+.stepper span { min-width: 76px; text-align: center; }
+
+.ingredients { list-style: none; margin: 0; padding: 0; }
+.ingredients li {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.ingredients li:last-child { border-bottom: none; }
+.ingredients li > div { display: flex; flex-direction: column; min-width: 0; }
+.ingredients b { white-space: nowrap; font-weight: 600; }
+.de { color: var(--muted); font-size: 13px; font-style: italic; }
+.swap { color: var(--accent); font-size: 13px; }
+
+.steps { margin: 0; padding-left: 22px; }
+.steps li { margin-bottom: 10px; }
+.steps li:last-child { margin-bottom: 0; }
+
+/* ---------- Меню ---------- */
+.gap-top { margin-top: 10px; }
+.notice { border-color: var(--accent); background: var(--accent-soft); }
+.notice p { margin-bottom: 10px; }
+
+.budget__row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.budget b.over { color: var(--sale); }
+.bar { height: 8px; margin: 8px 0; border-radius: 999px; background: var(--border); overflow: hidden; }
+.bar span { display: block; height: 100%; border-radius: inherit; background: var(--accent); }
+.bar span.over { background: var(--sale); }
+
+.day__title { margin-bottom: 4px; }
+.day--weekend .day__title::after {
+  content: 'выходной';
+  margin-left: 8px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: none;
+}
+.day__kcal { display: flex; flex-direction: column; gap: 2px; margin: 0 0 6px; font-size: 14px; color: var(--muted); }
+.day__kcal b { color: var(--text); }
+.day__kcal small { margin-left: 6px; font-size: 12px; }
+
+.slot {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+.slot__meal { grid-column: 1 / -1; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+.slot__body { min-width: 0; }
+.slot__name { display: block; color: var(--text); font-weight: 600; text-decoration: none; margin-bottom: 2px; }
+.slot__name:hover { color: var(--accent); }
+.slot .warn { grid-column: 1 / -1; }
+.replace {
+  align-self: center;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg);
+  color: var(--accent);
+  font-size: 22px;
+  cursor: pointer;
+}
+.replace:active { background: var(--accent-soft); }
+
+.tag { display: inline-block; margin-top: 6px; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.tag--double { background: var(--accent-soft); color: var(--accent); }
+.tag--leftover { background: var(--border); color: var(--text); }
+
+.drinks { margin: 8px 0 0; }
+.tag--sale { background: color-mix(in srgb, var(--sale) 15%, transparent); color: var(--sale); margin-right: 4px; }
+.offer { color: var(--sale) !important; }
+.sale { color: var(--sale); font-weight: 600; }
+.drink { margin-top: 14px; padding-top: 4px; border-top: 1px solid var(--border); }
+
+/* ---------- Список покупок ---------- */
+.trip-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+.trip-tabs button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 56px;
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.trip-tabs button small { font-weight: 400; color: var(--muted); font-size: 12px; }
+.trip-tabs button[aria-selected="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); }
+
+.shop-summary .btn { margin-top: 4px; }
+.dep__title { font-size: 17px; flex-wrap: wrap; gap: 0 8px !important; }
+.dep__title small { font-size: 13px; font-weight: 400; color: var(--muted); }
+
+.shop-list { list-style: none; margin: 0; padding: 0; }
+.shop-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.shop-list li:last-child { border-bottom: none; }
+.shop-item { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; padding: 10px 0; cursor: pointer; }
+.shop-item input { flex: none; width: 26px; height: 26px; accent-color: var(--accent); }
+.shop-item__text { display: flex; flex-direction: column; min-width: 0; }
+.shop-item__text b { font-weight: 600; overflow-wrap: anywhere; }
+.shop-item__text small { color: var(--muted); font-size: 13px; }
+.shop-item__price { display: flex; flex-direction: column; align-items: flex-end; flex: none; font-size: 14px; }
+.shop-item__price s { font-size: 12px; }
+.shop-item__price small { font-size: 11px; }
+.shop-list li.is-done .shop-item__text,
+.shop-list li.is-done .shop-item__price { opacity: .45; }
+.shop-list li.is-done .shop-item__text b { text-decoration: line-through; }
+
+/* Всплывающее «Сохранено» */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--tabbar-h) + 16px + env(safe-area-inset-bottom));
+  transform: translate(-50%, 20px);
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--text);
+  color: var(--bg);
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s, transform .2s;
+  z-index: 20;
+}
+.toast--show { opacity: 1; transform: translate(-50%, 0); }
+
+/* ---------- Нижнее меню ---------- */
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.tabbar__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 12px;
+}
+.tabbar__item svg {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.tabbar__item[aria-current="page"] {
+  color: var(--accent);
+  font-weight: 600;
+}
